@@ -20,12 +20,13 @@ class WumpController:
 		# list of unfull rooms 
 		unfulList = list(range(num_rooms))
 
+		#not guranteed to work
 		# for each room, get it a valid neighbor if it has < 3 neighbors
 		for room in tempList:
 			while len(self.graph[room]) < 3: 
 				# choose another room at random; skip if self or already has three neighbors
 				test = random.choice(unfulList)
-				if(test != room and len(self.graph[test]) != 3):
+				if(test != room and len(self.graph[test]) != 3 and room not in self.graph[test]):
 					self.graph[room].append(test)
 					self.graph[test].append(room)
 					if(len(self.graph[test]) == 3):
