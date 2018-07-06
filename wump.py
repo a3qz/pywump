@@ -119,19 +119,19 @@ class WumpController:
 
 	def ShootArrow(self, roomArray):
 		output = ""
-		roomArray = [self.InToSelfArray(i) for i in roomArray]
+		roomArray = [self.TranslateIncomingToSelf(i) for i in roomArray]
 		arrowLocation = self.playerLocation
 		shotWumpus = False
 		shotSelf = False
 		wokeWumpus = False
 		arrowPossibilities = self.graph[arrowLocation]
 		for room in roomArray:
+			if arrowLocation == self.playerLocation:
+				shotSelf = True
 			if room in arrowPossibilities:
 				arrowLocation = room
 			else:
 				arrowLocation = random.choice(arrowPossibilities)
-			if arrowLocation == self.playerLocation:
-				shotSelf = True
 			if arrowLocation == self.wumpLocation:
 				shotWumpus = True
 			arrowPossibilities = self.graph[arrowLocation]
@@ -143,10 +143,11 @@ class WumpController:
 		elif shotWumpus:
 			output += "AHA! YOU GOT THE WUMPUS!\n" 
 			output += "HEE HEE HEE - THE WUMPUS'LL GETCHA NEXT TIME!!"
+			return output
 		elif wokeWumpus:
 			output += self.WumpWake()
 		if not self.dead:
-			output += self.ReadAdjacentRooms()
+			output += self.ReadAdjacentRooms(self.playerLocation)
 			output += "YOU ARE IN CAVE {}\n".format(self.TranslateSelfToOut(self.playerLocation))
 			output += "TUNNELS LEAD TO CAVES "
 			output += str(self.TranslateSelfToOut(self.graph[self.playerLocation][0])) + " "
@@ -203,8 +204,9 @@ if __name__ == "__main__":
 	cont = WumpController()
 	
 	while True:
-		s = input()
-		y = s.split(" ")
+		s = input().rstrip()
+		print("\n")
+		y = s.split()
 		if y[0] == "n":
 			print(cont.Reset())
 		elif y[0] == 'm':
