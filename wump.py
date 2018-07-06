@@ -98,6 +98,8 @@ class WumpController:
 		return self.SelfToOutArray[outgoingnumber]
 
 	def MovePlayer(self, newRoom):
+		if self.dead:
+			return "CANNOT MOVE WHEN DEAD"
 		newRoom = self.TranslateIncomingToSelf(newRoom)
 		output = ""
 		if newRoom in self.graph[self.playerLocation]:
@@ -118,6 +120,8 @@ class WumpController:
 		return output 
 
 	def ShootArrow(self, roomArray):
+		if self.dead:
+			return "CANNOT SHOOT WHEN DEAD"
 		output = ""
 		roomArray = [self.TranslateIncomingToSelf(i) for i in roomArray]
 		arrowLocation = self.playerLocation
