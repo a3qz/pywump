@@ -26,7 +26,7 @@ class WumpController:
 			13:[12,14,18],
 			14:[4,13,15],
 			15:[6,14,16],
-			16:[15,18,18],
+			16:[15,17,18],
 			17:[7,16,20],
 			18:[13,16,19],
 			19:[9,18,20],
@@ -126,12 +126,12 @@ class WumpController:
 		wokeWumpus = False
 		arrowPossibilities = self.graph[arrowLocation]
 		for room in roomArray:
-			if arrowLocation == self.playerLocation:
-				shotSelf = True
-			if room in arrowPossibilities:
+			if room in arrowPossibilities or room == self.playerLocation:
 				arrowLocation = room
 			else:
 				arrowLocation = random.choice(arrowPossibilities)
+			if arrowLocation == self.playerLocation:
+				shotSelf = True
 			if arrowLocation == self.wumpLocation:
 				shotWumpus = True
 			arrowPossibilities = self.graph[arrowLocation]
