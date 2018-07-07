@@ -153,7 +153,15 @@ class WumpController:
 		else:
 			output += "HA HA HA - YOU LOSE!"
 		return output
-
+	def GetArrowCount(self):
+		output = str(self.num_arrows) + " ARROWS REMAINING\n"
+		output += self.ReadAdjacentRooms(self.playerLocation)
+		output += "YOU ARE IN CAVE {}\n".format(self.TranslateSelfToOut(self.playerLocation))
+		output += "TUNNELS LEAD TO CAVES "
+		output += str(self.TranslateSelfToOut(self.graph[self.playerLocation][0])) + " "
+		output += str(self.TranslateSelfToOut(self.graph[self.playerLocation][1])) + " "
+		output += str(self.TranslateSelfToOut(self.graph[self.playerLocation][2]))
+		return output
 	def CheckCurrentRoom(self):
 		output = ""
 		if(self.playerLocation == self.wumpLocation):
@@ -210,3 +218,5 @@ if __name__ == "__main__":
 			print(cont.MovePlayer(int(y[1])))
 		elif y[0] == 's':
 			print(cont.ShootArrow([int(i) for i in y[1:]]))
+		elif y[0] == 'a':
+			print(cont.GetArrowCount())
