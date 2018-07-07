@@ -1,1 +1,1 @@
-# pywump
+# wumpy
