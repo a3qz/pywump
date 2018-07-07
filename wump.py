@@ -59,16 +59,6 @@ class WumpController:
 		# create the transformations for randomizing room numbers
 		self.CreateTranslation()
 
-		# debug code, remove
-		for x in self.graph:
-			print(x, ": \n", *self.graph[x])
-		for x in self.contains:
-			print(x, ": \n", self.contains[x])
-		print(self.playerLocation)
-		print(self.wumpLocation)
-
-
-		#.format([print(i) for i in self.graph[self.playerLocation]])
 
 	
 	def ReadAdjacentRooms(self, currentRoomNum):
@@ -100,17 +90,17 @@ class WumpController:
 	def MovePlayer(self, newRoom):
 		if self.dead:
 			return "CANNOT MOVE WHEN DEAD"
+		
 		newRoom = self.TranslateIncomingToSelf(newRoom)
 		output = ""
 		if newRoom in self.graph[self.playerLocation]:
 			self.playerLocation = newRoom
 			output += self.CheckCurrentRoom()
 		else:
-			output = "NOT POSSIBLE"
+			output = "NOT POSSIBLE\n"
 		if not self.dead:
 			output += self.ReadAdjacentRooms(self.playerLocation)
 			output += "YOU ARE IN CAVE {}\n".format(self.TranslateSelfToOut(self.playerLocation))
-#			output += "TUNNELS LEAD TO CAVES {} {} {}".format([self.SelfToOutArray(i) for i in self.graph[self.playerLocation]])
 			output += "TUNNELS LEAD TO CAVES "
 			output += str(self.TranslateSelfToOut(self.graph[self.playerLocation][0])) + " "
 			output += str(self.TranslateSelfToOut(self.graph[self.playerLocation][1])) + " "
@@ -122,7 +112,10 @@ class WumpController:
 	def ShootArrow(self, roomArray):
 		if self.dead:
 			return "CANNOT SHOOT WHEN DEAD"
+		elif self.num_arrows == 0:
+			return "NO MORE ARROWS"
 		output = ""
+		self.num_arrows -= 1
 		roomArray = [self.TranslateIncomingToSelf(i) for i in roomArray]
 		arrowLocation = self.playerLocation
 		shotWumpus = False
@@ -146,7 +139,7 @@ class WumpController:
 			self.dead = True
 		elif shotWumpus:
 			output += "AHA! YOU GOT THE WUMPUS!\n" 
-			output += "HEE HEE HEE - THE WUMPUS'LL GETCHA NEXT TIME!!"
+			output += "HEE HEE HEE - THE WUMPUS'LL GETCHA NEXT TIME!!\n"
 			return output
 		elif wokeWumpus:
 			output += self.WumpWake()
@@ -183,7 +176,7 @@ class WumpController:
 		result = random.choice([0,1,2,3])
 		if(result != 3):
 			self.WumpMove()
-			output += "THE WUMPUS MOVED!"
+			output += "THE WUMPUS MOVED!\n"
 		if self.wumpLocation == self.playerLocation:
 			output += "TSK TSK TSK- WUMPUS GOT YOU!\n"
 			self.dead = True
